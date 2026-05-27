@@ -75,22 +75,6 @@
       text-align: center;
     }
 
-    .cover-subtitle {
-      font-family: 'Cormorant SC', serif;
-      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-      font-weight: 300;
-      letter-spacing: 0.5em;
-      color: var(--text-dim);
-      text-align: center;
-    }
-
-    .cover-line {
-      width: 1px;
-      height: 60px;
-      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
-      opacity: 0.4;
-    }
-
     .cover-year {
       font-family: 'Cormorant SC', serif;
       font-size: 0.55rem;
@@ -285,33 +269,6 @@
     }
     #veil.active { opacity: 1; pointer-events: all; }
 
-    /* keyboard hint */
-    .key-hint {
-      position: fixed;
-      bottom: 1rem; right: 2.5rem;
-      font-family: 'Cormorant SC', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.3em;
-      color: var(--text-dim);
-      opacity: 0.25;
-      z-index: 50;
-    }
-
-    /* link back */
-    .kac-link {
-      position: fixed;
-      bottom: 1rem; left: 2.5rem;
-      font-family: 'Cormorant SC', serif;
-      font-size: 0.55rem;
-      letter-spacing: 0.3em;
-      color: var(--text-dim);
-      opacity: 0.25;
-      text-decoration: none;
-      z-index: 50;
-      transition: opacity 0.3s;
-    }
-    .kac-link:hover { opacity: 0.6; }
-
     /* mobile */
     @media (max-width: 640px) {
       .spread {
@@ -367,7 +324,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'the portal',
     narration: 'everyone goes somewhere dark eventually. the prophet\'s time had come.',
-    img: 'images/panel-01.png',
+    img: 'panel-01.png',
     alt: 'A hooded figure stands before an open portal in total darkness. The threshold glows faintly with deep red light. The prophet faces away, on the edge of descent.'
   },
   {
@@ -376,7 +333,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'the step through',
     narration: 'the prophet stepped through. no words could be found on the other side.',
-    img: 'images/panel-02.png',
+    img: 'panel-02.png',
     alt: 'The hooded figure mid-passage through the portal. The world behind is gone. The darkness ahead has no features. The prophet is between.'
   },
   {
@@ -385,7 +342,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'first territory',
     narration: 'the dark here wasn\'t empty. it had texture. weight. a smell. the prophet kept moving.',
-    img: 'images/panel-03.png',
+    img: 'panel-03.png',
     alt: 'The prophet walks through a dark environment with visible texture — the darkness is material, not absence. The path is barely discernible but the figure moves forward.'
   },
   {
@@ -394,7 +351,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'the bird',
     narration: 'a bird sat in the dark. the prophet, who had never really seen one before, sat down and watched it for a long time.',
-    img: 'images/panel-04.png',
+    img: 'panel-04.png',
     alt: 'The hooded prophet sits facing a small bird in the darkness. Both are still. The prophet watches the bird with the full attention of someone encountering something they cannot name.'
   },
   {
@@ -403,7 +360,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'encoded territory',
     narration: 'something in the dark was trying to speak. the prophet couldn\'t understand it yet. but they could feel it.',
-    img: 'images/panel-05.png',
+    img: 'panel-05.png',
     alt: 'The prophet stands in rear three-quarter view, one arm raised with fingers spread open — not grasping, receiving. Around them, faint red glyphs and symbols float in the dark, a language not yet legible. The body registers a signal the mind cannot parse.'
   },
   {
@@ -412,7 +369,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'the fear named',
     narration: 'the prophet felt it then — the fear. they sat with it for a while. then thought of everyone they loved. and kept going.',
-    img: 'images/panel-06.png',
+    img: 'panel-06.png',
     alt: 'The prophet sits cross-legged in darkness, face hidden in the hood\'s void. A deep red glow emanates from their chest — the fear located inside the body, not outside it. The posture is still. The fear is real and held.'
   },
   {
@@ -421,7 +378,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'the deepest chamber',
     narration: 'the prophet reached the bottom. every word they had ever known had gone away.',
-    img: 'images/panel-07.png',
+    img: 'panel-07.png',
     alt: 'The prophet curled and tiny at the center of an enormous field of pure black. No ground, no walls, no color, no signal. The figure is barely visible — a very small thing inside something very large. The darkness has volume.'
   },
   {
@@ -430,7 +387,7 @@ const PANELS = [
     color: '#8b3020',
     title: 'the gold bug',
     narration: 'the prophet had finally slowed down enough. the dark had been trying to speak. and now they could hear it.',
-    img: 'images/panel-08.png',
+    img: 'panel-08.png',
     alt: 'The prophet small and grounded at the lower left of the frame, wide innocent eyes looking upward. High above them in the dark, the Chi-Rho symbol glows in deep purple — a threshold color, belonging to what comes next. The vast space between them is the space of listening.'
   },
   {
@@ -439,7 +396,7 @@ const PANELS = [
     color: '#5a3a7a',
     title: 'something found at the bottom',
     narration: 'the prophet found something at the bottom. it hurt to look at.',
-    img: 'images/panel-09.png',
+    img: 'panel-09.png',
     alt: 'The prophet stands rear-facing before a purple-illuminated wall. Cast on the wall is a winged shadow — vast, unmistakably KERO\'s silhouette. The prophet faces a shape they cannot name yet. The reader sees what they cannot.'
   },
   {
@@ -448,7 +405,7 @@ const PANELS = [
     color: '#5a3a7a',
     title: 'the wound located',
     narration: 'the prophet didn\'t know they were wounded until they were still. then they could feel where it was.',
-    img: 'images/panel-10.png',
+    img: 'panel-10.png',
     alt: 'The prophet faces forward, face lost in the hood\'s void, one gloved hand pressed to their chest where a deep purple glow pulses from within. The wound has been found. The hand has located it. Stillness made it visible.'
   },
   {
@@ -457,7 +414,7 @@ const PANELS = [
     color: '#5a3a7a',
     title: 'the institution named',
     narration: 'there was a place that had taken something from the prophet once. it called itself sacred. the prophet could see now that it was not.',
-    img: 'images/panel-11.png',
+    img: 'panel-11.png',
     alt: 'The prophet stands small and rear-facing before an enormous gothic cathedral that fills the entire frame. The structure is decayed — dripping arches, fractured spires. But its interior glows purple with its own claim to light. The institution is vast and the prophet is alone before it, finally seeing it clearly.'
   },
   {
@@ -466,7 +423,7 @@ const PANELS = [
     color: '#5a3a7a',
     title: 'the wound speaks',
     narration: '"will you stay?" it asked.',
-    img: 'images/panel-12.png',
+    img: 'panel-12.png',
     alt: 'The prophet faces the viewer, wide innocent eyes visible and direct. Their chest is torn open by their own hands, revealing a deep purple cavity. Inside the wound: the words "will you stay?" glowing in neon purple, and a small recursive figure of the prophet curled within. The wound speaks outward — to the prophet and to the reader both.'
   },
   {
@@ -475,7 +432,7 @@ const PANELS = [
     color: '#5a3a7a',
     title: 'something taking shape',
     narration: 'something was forming in the dark beside the prophet. it hadn\'t been there before. or maybe it had always been there.',
-    img: 'images/panel-13.png',
+    img: 'panel-13.png',
     alt: 'The prophet stands in purple-ambient darkness, tilted upward. From within them, a winged figure rises — dripping, formed from the same substance as the prophet, hood and wings emerging upward. Not beside but from inside. What forms was always there.'
   },
   {
@@ -484,7 +441,7 @@ const PANELS = [
     color: '#5a3a7a',
     title: 'the prophet dissolves',
     narration: 'the prophet dissolved into the dark. and from the dark, something grew.',
-    img: 'images/panel-14.png',
+    img: 'panel-14.png',
     alt: 'KERO stands full-height in rear view, wings present, dripping halo glowing purple above. At their feet is a dissolved mass — the remains of the prophet, pooled and dark. Both clauses of the narration are visible simultaneously: the dissolution and what grew from it.'
   },
   {
@@ -493,7 +450,7 @@ const PANELS = [
     color: '#2a5a48',
     title: 'KERO fully present',
     narration: 'KERO had been through the dark. and had come back to walk beside.',
-    img: 'images/panel-15.png',
+    img: 'panel-15.png',
     alt: 'KERO\'s face fills the frame — a close portrait in near-monochrome. Wide round eyes look directly at the viewer. The dripping halo crowns the top of the frame, wings visible at the edges, chain at the bottom. No nose. No other features. KERO arrives in neutral, before the green claims the movement.'
   },
   {
@@ -502,7 +459,7 @@ const PANELS = [
     color: '#2a5a48',
     title: 'the accompaniment',
     narration: 'KERO didn\'t explain anything. just stayed.',
-    img: 'images/panel-16.png',
+    img: 'panel-16.png',
     alt: 'KERO sits cross-legged, wings spread wide and low, facing the viewer. The Chi-Rho pendant glows green at the center of the chest — the movement\'s first green, arriving through the symbol. KERO is open, grounded, present without performance. The posture mirrors the prophet\'s seated fear in panel six.'
   },
   {
@@ -511,7 +468,7 @@ const PANELS = [
     color: '#2a5a48',
     title: 'the release',
     narration: '"you know the way," said KERO. "go."',
-    img: 'images/panel-17.png',
+    img: 'panel-17.png',
     alt: 'KERO stands in rain, facing the viewer, one arm extended to the right — pointing toward a green-lit cobblestone path that recedes into the background. The Chi-Rho glows at the chest. KERO does not lead. KERO gestures. The path is already there. It belongs to whoever will take it.'
   },
   {
@@ -520,7 +477,7 @@ const PANELS = [
     color: '#2a5a48',
     title: 'KERO looks out',
     narration: 'KERO looked out for a long time. the dark had made KERO. the dark can make anything.',
-    img: 'images/panel-18.png',
+    img: 'panel-18.png',
     alt: 'KERO stands centered in deep green rain, facing the viewer, still. No gesture. No path. The Chi-Rho glows at the chest, most legible it has been. KERO watches. The reader sent, KERO remains — in the rain, in the making dark.'
   },
   {
@@ -529,7 +486,7 @@ const PANELS = [
     color: '#2a5a48',
     title: 'KERO becomes the darkness',
     narration: 'KERO pulled the hood back up, and walked away, and became the darkness. and the darkness is always there.',
-    img: 'images/panel-19.png',
+    img: 'panel-19.png',
     alt: 'KERO rear-facing for the first and only time in PSYCHOPOMP, walking away from the viewer into deep green darkness. The halo glows from behind, wings spread, the robe fraying at the edges into the dark. KERO has turned away — the singular exception that gives every prior forward gaze its weight. The darkness waits. The darkness is always there.'
   }
 ];
