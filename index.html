@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KEROSIS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300;400;600&family=Cormorant:ital,wght@0,300;0,400;1,300;1,400&family=Cinzel+Decorative:wght@400;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #05050a;
+      --gold: #e8c84a;
+      --red: #8b3020;
+      --purple: #5a3a7a;
+      --green: #2a5a48;
+      --text: #c8c0b0;
+      --text-dim: #6a6258;
+      --panel-w: min(420px, 45vw);
+      --panel-h: min(630px, 67.5vw);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Cormorant', Georgia, serif;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    /* grain overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* ── COVER ── */
+    #cover {
+      position: fixed; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 2rem;
+      background: var(--bg);
+      z-index: 100;
+      transition: opacity 0.8s ease;
+    }
+    #cover.hidden { opacity: 0; pointer-events: none; }
+
+    .cover-symbol {
+      font-size: 3rem;
+      color: var(--gold);
+      opacity: 0.7;
+      letter-spacing: 0.2em;
+      animation: pulse 4s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 0.9; }
+    }
+
+    .cover-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .cover-subtitle {
+      font-family: 'Cormorant SC', serif;
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      font-weight: 300;
+      letter-spacing: 0.5em;
+      color: var(--text-dim);
+      text-align: center;
+    }
+
+    .cover-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+      opacity: 0.4;
+    }
+
+    .cover-year {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.5em;
+      color: var(--text-dim);
+      opacity: 0.4;
+      text-align: center;
+    }
+    .cover-begin {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      color: var(--text-dim);
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 1rem 2rem;
+      transition: color 0.3s;
+      text-transform: uppercase;
+    }
+    .cover-begin:hover { color: var(--gold); }
+
+    /* ── SPREAD ── */
+    #spread-container {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+    }
+    #spread-container.visible { opacity: 1; }
+
+    .spread {
+      display: flex;
+      width: min(900px, 90vw);
+      height: min(630px, 67.5vw);
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .spread.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* image side */
+    .panel-side {
+      width: 50%;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .panel-side img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+
+    /* text side */
+    .text-side {
+      width: 50%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 3rem 3.5rem;
+      border-left: 1px solid rgba(255,255,255,0.04);
+      position: relative;
+      background: var(--bg);
+    }
+
+    .panel-number {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      color: var(--text-dim);
+      margin-bottom: 0.6rem;
+    }
+
+    .panel-title {
+      font-family: 'Cormorant SC', serif;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      font-weight: 400;
+      letter-spacing: 0.15em;
+      color: var(--text);
+      margin-bottom: 2rem;
+      line-height: 1.4;
+    }
+
+    .divider {
+      width: 24px;
+      height: 1px;
+      background: var(--movement-color, var(--text-dim));
+      opacity: 0.5;
+      margin-bottom: 2rem;
+    }
+
+    .narration {
+      font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+      font-weight: 300;
+      line-height: 1.9;
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .narration em {
+      font-style: normal;
+      color: var(--movement-color, var(--text));
+    }
+
+    /* navigation */
+    .nav-area {
+      position: fixed;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      z-index: 50;
+    }
+
+    .nav-btn {
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.4em;
+      color: var(--text-dim);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      transition: color 0.3s;
+      text-transform: uppercase;
+    }
+    .nav-btn:hover { color: var(--gold); }
+    .nav-btn:disabled { opacity: 0.2; cursor: default; }
+
+    .nav-dots {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .nav-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      opacity: 0.3;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .nav-dot.active { opacity: 1; background: var(--gold); transform: scale(1.4); }
+
+    /* panel count */
+    .panel-count {
+      position: fixed;
+      top: 2rem; right: 2.5rem;
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      opacity: 0.5;
+      z-index: 50;
+    }
+
+    /* top wordmark */
+    .wordmark {
+      position: fixed;
+      top: 2rem; left: 2.5rem;
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.5em;
+      color: var(--text-dim);
+      opacity: 0.4;
+      z-index: 50;
+      cursor: pointer;
+    }
+    .wordmark:hover { opacity: 0.8; }
+
+    /* transition veil */
+    #veil {
+      position: fixed; inset: 0;
+      background: var(--bg);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 90;
+      transition: opacity 0.3s ease;
+    }
+    #veil.active { opacity: 1; pointer-events: all; }
+
+    /* keyboard hint */
+    .key-hint {
+      position: fixed;
+      bottom: 1rem; right: 2.5rem;
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      opacity: 0.25;
+      z-index: 50;
+    }
+
+    /* link back */
+    .kac-link {
+      position: fixed;
+      bottom: 1rem; left: 2.5rem;
+      font-family: 'Cormorant SC', serif;
+      font-size: 0.55rem;
+      letter-spacing: 0.3em;
+      color: var(--text-dim);
+      opacity: 0.25;
+      text-decoration: none;
+      z-index: 50;
+      transition: opacity 0.3s;
+    }
+    .kac-link:hover { opacity: 0.6; }
+
+    /* mobile */
+    @media (max-width: 640px) {
+      .spread {
+        flex-direction: column;
+        width: 95vw;
+        height: auto;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+      }
+      .panel-side { width: 100%; height: 60vw; min-height: 280px; }
+      .text-side { width: 100%; padding: 1.5rem 1.5rem 3rem; }
+      .nav-area { bottom: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="veil"></div>
+
+<!-- COVER -->
+<div id="cover">
+  <div class="cover-title">KEROSIS</div>
+  <div class="cover-symbol">☧</div>
+  <button class="cover-begin" onclick="begin()">enter</button>
+  <div class="cover-year">KAC 2026</div>
+</div>
+
+<!-- WORDMARK -->
+<div class="wordmark" onclick="returnCover()">KEROSIS</div>
+
+<!-- PANEL COUNT -->
+<div class="panel-count" id="panel-count"></div>
+
+<!-- SPREAD CONTAINER -->
+<div id="spread-container">
+  <!-- spreads injected by JS -->
+</div>
+
+<!-- NAV -->
+<div class="nav-area" id="nav-area" style="display:none">
+  <button class="nav-btn" id="btn-prev" onclick="go(-1)">← prev</button>
+  <div class="nav-dots" id="nav-dots"></div>
+  <button class="nav-btn" id="btn-next" onclick="go(1)">next →</button>
+</div>
+
+
+
+<script>
+const PANELS = [
+  {
+    num: 1,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'the portal',
+    narration: 'everyone goes somewhere dark eventually. the prophet\'s time had come.',
+    img: 'images/panel-01.png',
+    alt: 'A hooded figure stands before an open portal in total darkness. The threshold glows faintly with deep red light. The prophet faces away, on the edge of descent.'
+  },
+  {
+    num: 2,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'the step through',
+    narration: 'the prophet stepped through. no words could be found on the other side.',
+    img: 'images/panel-02.png',
+    alt: 'The hooded figure mid-passage through the portal. The world behind is gone. The darkness ahead has no features. The prophet is between.'
+  },
+  {
+    num: 3,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'first territory',
+    narration: 'the dark here wasn\'t empty. it had texture. weight. a smell. the prophet kept moving.',
+    img: 'images/panel-03.png',
+    alt: 'The prophet walks through a dark environment with visible texture — the darkness is material, not absence. The path is barely discernible but the figure moves forward.'
+  },
+  {
+    num: 4,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'the bird',
+    narration: 'a bird sat in the dark. the prophet, who had never really seen one before, sat down and watched it for a long time.',
+    img: 'images/panel-04.png',
+    alt: 'The hooded prophet sits facing a small bird in the darkness. Both are still. The prophet watches the bird with the full attention of someone encountering something they cannot name.'
+  },
+  {
+    num: 5,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'encoded territory',
+    narration: 'something in the dark was trying to speak. the prophet couldn\'t understand it yet. but they could feel it.',
+    img: 'images/panel-05.png',
+    alt: 'The prophet stands in rear three-quarter view, one arm raised with fingers spread open — not grasping, receiving. Around them, faint red glyphs and symbols float in the dark, a language not yet legible. The body registers a signal the mind cannot parse.'
+  },
+  {
+    num: 6,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'the fear named',
+    narration: 'the prophet felt it then — the fear. they sat with it for a while. then thought of everyone they loved. and kept going.',
+    img: 'images/panel-06.png',
+    alt: 'The prophet sits cross-legged in darkness, face hidden in the hood\'s void. A deep red glow emanates from their chest — the fear located inside the body, not outside it. The posture is still. The fear is real and held.'
+  },
+  {
+    num: 7,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'the deepest chamber',
+    narration: 'the prophet reached the bottom. every word they had ever known had gone away.',
+    img: 'images/panel-07.png',
+    alt: 'The prophet curled and tiny at the center of an enormous field of pure black. No ground, no walls, no color, no signal. The figure is barely visible — a very small thing inside something very large. The darkness has volume.'
+  },
+  {
+    num: 8,
+    movement: 'katabasis',
+    color: '#8b3020',
+    title: 'the gold bug',
+    narration: 'the prophet had finally slowed down enough. the dark had been trying to speak. and now they could hear it.',
+    img: 'images/panel-08.png',
+    alt: 'The prophet small and grounded at the lower left of the frame, wide innocent eyes looking upward. High above them in the dark, the Chi-Rho symbol glows in deep purple — a threshold color, belonging to what comes next. The vast space between them is the space of listening.'
+  },
+  {
+    num: 9,
+    movement: 'traumaturgy',
+    color: '#5a3a7a',
+    title: 'something found at the bottom',
+    narration: 'the prophet found something at the bottom. it hurt to look at.',
+    img: 'images/panel-09.png',
+    alt: 'The prophet stands rear-facing before a purple-illuminated wall. Cast on the wall is a winged shadow — vast, unmistakably KERO\'s silhouette. The prophet faces a shape they cannot name yet. The reader sees what they cannot.'
+  },
+  {
+    num: 10,
+    movement: 'traumaturgy',
+    color: '#5a3a7a',
+    title: 'the wound located',
+    narration: 'the prophet didn\'t know they were wounded until they were still. then they could feel where it was.',
+    img: 'images/panel-10.png',
+    alt: 'The prophet faces forward, face lost in the hood\'s void, one gloved hand pressed to their chest where a deep purple glow pulses from within. The wound has been found. The hand has located it. Stillness made it visible.'
+  },
+  {
+    num: 11,
+    movement: 'traumaturgy',
+    color: '#5a3a7a',
+    title: 'the institution named',
+    narration: 'there was a place that had taken something from the prophet once. it called itself sacred. the prophet could see now that it was not.',
+    img: 'images/panel-11.png',
+    alt: 'The prophet stands small and rear-facing before an enormous gothic cathedral that fills the entire frame. The structure is decayed — dripping arches, fractured spires. But its interior glows purple with its own claim to light. The institution is vast and the prophet is alone before it, finally seeing it clearly.'
+  },
+  {
+    num: 12,
+    movement: 'traumaturgy',
+    color: '#5a3a7a',
+    title: 'the wound speaks',
+    narration: '"will you stay?" it asked.',
+    img: 'images/panel-12.png',
+    alt: 'The prophet faces the viewer, wide innocent eyes visible and direct. Their chest is torn open by their own hands, revealing a deep purple cavity. Inside the wound: the words "will you stay?" glowing in neon purple, and a small recursive figure of the prophet curled within. The wound speaks outward — to the prophet and to the reader both.'
+  },
+  {
+    num: 13,
+    movement: 'traumaturgy',
+    color: '#5a3a7a',
+    title: 'something taking shape',
+    narration: 'something was forming in the dark beside the prophet. it hadn\'t been there before. or maybe it had always been there.',
+    img: 'images/panel-13.png',
+    alt: 'The prophet stands in purple-ambient darkness, tilted upward. From within them, a winged figure rises — dripping, formed from the same substance as the prophet, hood and wings emerging upward. Not beside but from inside. What forms was always there.'
+  },
+  {
+    num: 14,
+    movement: 'traumaturgy',
+    color: '#5a3a7a',
+    title: 'the prophet dissolves',
+    narration: 'the prophet dissolved into the dark. and from the dark, something grew.',
+    img: 'images/panel-14.png',
+    alt: 'KERO stands full-height in rear view, wings present, dripping halo glowing purple above. At their feet is a dissolved mass — the remains of the prophet, pooled and dark. Both clauses of the narration are visible simultaneously: the dissolution and what grew from it.'
+  },
+  {
+    num: 15,
+    movement: 'psychopomp',
+    color: '#2a5a48',
+    title: 'KERO fully present',
+    narration: 'KERO had been through the dark. and had come back to walk beside.',
+    img: 'images/panel-15.png',
+    alt: 'KERO\'s face fills the frame — a close portrait in near-monochrome. Wide round eyes look directly at the viewer. The dripping halo crowns the top of the frame, wings visible at the edges, chain at the bottom. No nose. No other features. KERO arrives in neutral, before the green claims the movement.'
+  },
+  {
+    num: 16,
+    movement: 'psychopomp',
+    color: '#2a5a48',
+    title: 'the accompaniment',
+    narration: 'KERO didn\'t explain anything. just stayed.',
+    img: 'images/panel-16.png',
+    alt: 'KERO sits cross-legged, wings spread wide and low, facing the viewer. The Chi-Rho pendant glows green at the center of the chest — the movement\'s first green, arriving through the symbol. KERO is open, grounded, present without performance. The posture mirrors the prophet\'s seated fear in panel six.'
+  },
+  {
+    num: 17,
+    movement: 'psychopomp',
+    color: '#2a5a48',
+    title: 'the release',
+    narration: '"you know the way," said KERO. "go."',
+    img: 'images/panel-17.png',
+    alt: 'KERO stands in rain, facing the viewer, one arm extended to the right — pointing toward a green-lit cobblestone path that recedes into the background. The Chi-Rho glows at the chest. KERO does not lead. KERO gestures. The path is already there. It belongs to whoever will take it.'
+  },
+  {
+    num: 18,
+    movement: 'psychopomp',
+    color: '#2a5a48',
+    title: 'KERO looks out',
+    narration: 'KERO looked out for a long time. the dark had made KERO. the dark can make anything.',
+    img: 'images/panel-18.png',
+    alt: 'KERO stands centered in deep green rain, facing the viewer, still. No gesture. No path. The Chi-Rho glows at the chest, most legible it has been. KERO watches. The reader sent, KERO remains — in the rain, in the making dark.'
+  },
+  {
+    num: 19,
+    movement: 'psychopomp',
+    color: '#2a5a48',
+    title: 'KERO becomes the darkness',
+    narration: 'KERO pulled the hood back up, and walked away, and became the darkness. and the darkness is always there.',
+    img: 'images/panel-19.png',
+    alt: 'KERO rear-facing for the first and only time in PSYCHOPOMP, walking away from the viewer into deep green darkness. The halo glows from behind, wings spread, the robe fraying at the edges into the dark. KERO has turned away — the singular exception that gives every prior forward gaze its weight. The darkness waits. The darkness is always there.'
+  }
+];
+
+let current = 0;
+const container = document.getElementById('spread-container');
+const navDots = document.getElementById('nav-dots');
+const panelCount = document.getElementById('panel-count');
+const veil = document.getElementById('veil');
+
+// build spreads
+PANELS.forEach((p, i) => {
+  const spread = document.createElement('div');
+  spread.className = 'spread';
+  spread.id = `spread-${i}`;
+  spread.innerHTML = `
+    <div class="panel-side">
+      <img src="${p.img}" alt="${p.alt}" loading="${i < 3 ? 'eager' : 'lazy'}" />
+    </div>
+    <div class="text-side">
+      <div class="panel-title">${p.title}</div>
+      <div class="divider"></div>
+      <div class="narration">${p.narration}</div>
+    </div>
+  `;
+  container.appendChild(spread);
+});
+
+// build dots
+PANELS.forEach((p, i) => {
+  const dot = document.createElement('div');
+  dot.className = `nav-dot ${p.movement}`;
+  dot.title = `${p.num}. ${p.title}`;
+  dot.onclick = () => jumpTo(i);
+  navDots.appendChild(dot);
+});
+
+function showSpread(index, dir = 1) {
+  const spreads = document.querySelectorAll('.spread');
+  const dots = document.querySelectorAll('.nav-dot');
+
+  veil.classList.add('active');
+  setTimeout(() => {
+    spreads.forEach(s => s.classList.remove('active'));
+    spreads[index].classList.add('active');
+    dots.forEach(d => d.classList.remove('active'));
+    dots[index].classList.add('active');
+    panelCount.textContent = `${index + 1} / 19`;
+    document.getElementById('btn-prev').disabled = index === 0;
+    document.getElementById('btn-next').disabled = index === PANELS.length - 1;
+    current = index;
+    veil.classList.remove('active');
+  }, 300);
+}
+
+function go(dir) {
+  const next = current + dir;
+  if (next < 0 || next >= PANELS.length) return;
+  showSpread(next, dir);
+}
+
+function jumpTo(index) {
+  showSpread(index);
+}
+
+function begin() {
+  const cover = document.getElementById('cover');
+  cover.classList.add('hidden');
+  document.getElementById('spread-container').classList.add('visible');
+  document.getElementById('nav-area').style.display = 'flex';
+  showSpread(0);
+}
+
+function returnCover() {
+  const cover = document.getElementById('cover');
+  cover.style.opacity = '0';
+  cover.classList.remove('hidden');
+  document.getElementById('spread-container').classList.remove('visible');
+  document.getElementById('nav-area').style.display = 'none';
+  setTimeout(() => { cover.style.opacity = ''; }, 10);
+}
+
+// keyboard nav
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') go(1);
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') go(-1);
+});
+
+// touch swipe
+let touchX = null;
+document.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+  touchX = null;
+});
+</script>
+</body>
+</html>
