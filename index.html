@@ -272,22 +272,25 @@
     #veil.active { opacity: 1; pointer-events: all; }
 
     @media (max-width: 640px) {
-      .panel-side img {
-        object-fit: contain;
-        object-position: center center;
-      }
-    }
-    @media (max-width: 640px) {
       .spread {
         flex-direction: column;
         width: 95vw;
         height: auto;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
+        position: relative;
+        top: auto; left: auto;
+        transform: none;
+        margin: 0 auto;
       }
       .panel-side { width: 100%; height: auto; aspect-ratio: 2/3; }
+      .panel-side img { object-fit: contain; object-position: center center; }
       .text-side { width: 100%; padding: 1.5rem 1.5rem 3rem; }
       .nav-area { bottom: 1.5rem; }
+      #spread-container {
+        align-items: flex-start;
+        padding-top: 4rem;
+        padding-bottom: 6rem;
+        overflow-y: auto;
+      }
     }
   </style>
 </head>
